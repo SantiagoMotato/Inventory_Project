@@ -32,10 +32,12 @@ function SideBar() {
         setOpenSideBar(!openSideBar);
     };
 
+    // hover:bg-[#33aa15]
+
   return (
     <>
       <section className=''>
-        <div className={`${openSideBar ? 'w-72':'w-20'} min-h-screen bg-slate-100 duration-700 shadow-2xl`}>
+        <div className={`${openSideBar ? 'w-72':'w-20'} min-h-screen bg-white duration-700 shadow-2xl`}>
             <div className='flex justify-end relative left-16 top-4'>
                 <HiMenuAlt3 size={42} className='cursor-pointer  bg-slate-300 drop-shadow pt-2 pb-2 pl-1 pr-1 rounded-lg' onClick={handleClick}/>
             </div>
@@ -45,7 +47,7 @@ function SideBar() {
             </div>
             <div className='fle flex-col relative gap-4 mt-12 mr-4 ml-4'>
                 {modulos.map((modulo, i) => (
-                    <Link to={modulo.link} key={i} className={`${openSideBar && 'hover:text-white hover:bg-[#36b616]'} group flex itmes-center text-sm gap-3.5 font-medium p-2 mt-6 hover:bg-[#AEFF8A] text-[#4BB71C] duration-150 rounded-md`}>
+                    <Link to={modulo.link} key={i} className={`${openSideBar && 'hover:text-white hover:bg-[#33aa15]'} group flex itmes-center text-sm gap-3.5 font-medium p-2 mt-6 hover:bg-[#AEFF8A] text-[#4BB71C] duration-150 rounded-md`}>
 
                     <div className='flex'>
                         <div>{React.createElement(modulo.icon, {size:'35'})}</div>
@@ -57,7 +59,7 @@ function SideBar() {
                         </h2>
                       </div> 
 
-                      <h2 className={`${openSideBar && 'hidden'} absolute left-48 text-base bg-[#96E175] font-semibold whitespace-pre text-[#123A00] rounded-md drop-shadow-lg px-0 py-0 w-0 overflow-hidden group-hover:px-2 group-hover:py-1 group-hover:left-16 group-hover:duration-300 group-hover:w-fit`}>
+                      <h2 className={`${openSideBar && 'hidden'} absolute left-48 text-base bg-[#96E175] font-semibold whitespace-pre text-[#123A00] rounded-md drop-shadow-lg px-0 py-0 w-0 overflow-hidden group-hover:px-2 group-hover:py-1 group-hover:left-16 group-hover:duration-300 group-hover:w-fit z-10`}>
                         {modulo.name}
                       </h2>
                     
