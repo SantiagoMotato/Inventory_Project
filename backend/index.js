@@ -11,9 +11,11 @@ import RutaEquipos from "./src/routes/equipos.routes.js";
 import RutasMantenimientos from "./src/routes/mantenimientos.routes.js";
 import RutaLogin from "./src/routes/userValidator.routes.js";
 import {poolDB} from './src/database/conection.js';
+import cors from 'cors'
 
 const app = express();
 
+app.use(cors());
 app.use(bodyParser.json());
 app.use("/usuarios", RutaUsuarios);
 app.use("/tipoUsuario", RutaTipoUsuario);

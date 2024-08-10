@@ -100,13 +100,12 @@
 // export default App;
 
 
-import { BrowserRouter as Router, Route, Routes, useLocation } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes, useLocation } from "react-router-dom"; //useLocation obtiene  la ruta actual. Permite acceder a la información sobre la ubicación actual, es decir, la URL que está activa en ese momento. 
 import NavBar from "../src/components/organismos/NavBar";
 import SideBar from "../src/components/organismos/SideBar";
 import MyRoutes from './components/Routes/routes';
 // import Cards from "../src/components/organismos/Cards";
 // import { IconoUnidades, IconoUsuarios, IconoEquipos, IconoMantenimientos } from '../src/components/icons/Bell';
-import Home from './components/pages/Home'
 
 function App() {
   return (
@@ -127,7 +126,7 @@ function App() {
 function MainContent() {
   const location = useLocation();
 
-  // Verifica si la ruta actual es la ruta principal "/"
+  // Verifica si la ruta actual es la ruta principal "/", la ruta principal gracias a UseLocation. Por ejemplo const location = useLocation(); obtiene la ruta actual, por ejemplo, "/", o en casos anteriores "/usuarios"
   const showCards = location.pathname === '/';
 
   return (
@@ -151,7 +150,7 @@ function MainContent() {
           {/* <Home/> */}
         </section>
       )}
-      <MyRoutes />
+      <MyRoutes /> {/* MyRoutes contiene a los componentes Usuarios, ubicaciones, etc */}
     </>
   );
 }

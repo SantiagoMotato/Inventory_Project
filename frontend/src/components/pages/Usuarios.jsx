@@ -4,8 +4,8 @@ import Datatable from '../tables/UsersDatatable'
 function Usuarios() {
   return (
     <>
-       <div className='flex '>
-       <Datatable/>
+       <div className='flex justify-center'>
+        <Datatable/>
        </div>
     </>
   )

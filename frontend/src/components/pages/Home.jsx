@@ -16,17 +16,17 @@ function Home() {
           </div>
         </Cards>
         <Cards bgColor="bg-[#28a7464e]" text={"Encargados"}>
-        <div className="border-l-8 rounded-md border-[#1b7918] h-[76px] flex items-center pl-12">
+          <div className="border-l-8 rounded-md border-[#1b7918] h-[76px] flex items-center pl-12">
             <IconoUsuarios />
           </div>
         </Cards>
         <Cards bgColor="bg-[#6e42c157]" text={"Equipos"}>
-        <div className="border-l-8 rounded-md border-[#37009eac] h-[76px] flex items-center pl-12">
+          <div className="border-l-8 rounded-md border-[#37009eac] h-[76px] flex items-center pl-12">
             <IconoEquipos />
           </div>
         </Cards>
         <Cards bgColor="bg-[#ff851b55]" text={"Mantenimientos"}>
-        <div className="border-l-8 rounded-md border-[#b45400a4] h-[76px] flex items-center pl-12">
+          <div className="border-l-8 rounded-md border-[#b45400a4] h-[76px] flex items-center pl-12">
             <IconoMantenimientos />
           </div>
         </Cards>
