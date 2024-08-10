@@ -7,7 +7,9 @@ import { MdDevicesFold } from "react-icons/md";
 import { GrVmMaintenance } from "react-icons/gr";
 import { FaMapLocationDot } from "react-icons/fa6";
 import { FaUsers } from "react-icons/fa"
-import { HiMenuAlt3 } from 'react-icons/hi';
+// import { HiMenuAlt3 } from 'react-icons/hi';
+// import { TiThMenu } from "react-icons/ti";
+import { AiOutlineMenu } from "react-icons/ai";
 import { TbLogout2 } from "react-icons/tb";
 
 
@@ -17,10 +19,10 @@ function SideBar() {
     const [openSideBar, setOpenSideBar] = useState(false);
 
     const modulos = [
-        {name:"Home", link:"", icon: IoHomeSharp},
-        {name:"Equipos", link:"/", icon: MdDevicesFold},
-        {name:"Mantenimientos", link:"/", icon: GrVmMaintenance},
-        {name:"Ubicaciones", link:"/", icon: FaMapLocationDot},
+        {name:"Home", link:"/", icon: IoHomeSharp},
+        {name:"Equipos", link:"/equipos", icon: MdDevicesFold},
+        {name:"Mantenimientos", link:"/mantenimientos", icon: GrVmMaintenance},
+        {name:"Ubicaciones", link:"/ubicaciones", icon: FaMapLocationDot},
         {name:"Usuarios", link:"/usuarios", icon: FaUsers},
     ];
 
@@ -39,9 +41,9 @@ function SideBar() {
       <section className=''>
         <div className={`${openSideBar ? 'w-72':'w-20'} min-h-screen bg-white duration-700 shadow-2xl`}>
             <div className='flex justify-end relative left-16 top-4'>
-                <HiMenuAlt3 size={42} className='cursor-pointer  bg-slate-300 drop-shadow pt-2 pb-2 pl-1 pr-1 rounded-lg' onClick={handleClick}/>
+                <AiOutlineMenu size={42} className='cursor-pointer hover:scale-90 duration-300 bg-slate-100 hover:bg-slate-200 text-gray-500 drop-shadow-md border-2 pt-2 pb-2 pl-1 pr-1 rounded-lg' onClick={handleClick}/>
             </div>
-            <div className='flex relative bottom-8 items-center mr-2 ml-2 h-14 rounded-xl'>
+            <div className='flex relative bottom-8 items-center mr-2 ml-2 h-14 rounded-xl cursor-pointer'>
                 <img className='w-16 h-16' src={logoTool} alt="" />
                 <p className={`uppercase font-bold text-[#123A00] text-2xl mx-6 duration-500 ${!openSideBar && 'opacity-0 translate-x-28 overflow-hidden'}`}>inventory</p>
             </div>

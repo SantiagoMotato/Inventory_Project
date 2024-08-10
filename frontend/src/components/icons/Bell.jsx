@@ -7,7 +7,7 @@ import { RiFolderSettingsLine } from "react-icons/ri";
 export const IconoUnidades = () =>{
   return(
     <>
-    <div className="border-r-2 border-slate-200 pr-3">
+    <div className="border-r-4 rounded-md border-[#0011ff] pr-3">
       <RiDashboardHorizontalFill size={40} className="text-[#0011ff]"/>
     </div>
     </>
@@ -17,7 +17,7 @@ export const IconoUnidades = () =>{
 export const IconoUsuarios = () =>{
   return(
     <>
-    <div className="border-r-2 border-slate-200 pr-3">
+    <div className="border-r-4 rounded-md border-[#1b7918] pr-3">
       <FaUsers size={40} className="text-[#1b7918] relative right-4"/>
     </div>
     </>
@@ -27,7 +27,7 @@ export const IconoUsuarios = () =>{
 export const IconoEquipos = () =>{
   return(
     <>
-    <div className="border-r-2 border-slate-200 pr-3">
+    <div className="border-r-4 rounded-md border-[#37009eac] pr-3">
       <GrVirtualMachine size={40} className="text-[#37009eac] relative right-6"/>
     </div>
     </>
@@ -37,7 +37,7 @@ export const IconoEquipos = () =>{
 export const IconoMantenimientos = () =>{
   return(
     <>
-    <div className="border-r-2 border-slate-200 pr-3">
+    <div className="border-r-4 rounded-md border-[#b45400a4] pr-3">
       <RiFolderSettingsLine size={40} className="text-[#b45400a4] relative right-2"/>
     </div>
     </>
