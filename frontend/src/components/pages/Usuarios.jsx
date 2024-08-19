@@ -1,5 +1,6 @@
 import React from 'react'
 import Datatable from '../tables/UsersDatatable'
+import ModalRegistrarUsuario from '../modals/RegistrarUsuario'
 
 function Usuarios() {
   return (
@@ -7,6 +8,7 @@ function Usuarios() {
        <div className='flex justify-center'>
         <Datatable/>
        </div>
+        <ModalRegistrarUsuario/>
     </>
   )
 }

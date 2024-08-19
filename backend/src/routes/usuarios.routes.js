@@ -6,7 +6,7 @@ const router = Router();
 
 router.get("/listar", listarUsuarios);
 router.get("/listar/:id", listarUsuario);
-router.post("/registrar", validationToken, registrarUsuario);
-router.put("/actualizar/:id", validationToken, actualizarUsuario);
+router.post("/registrar", /* validationToken, */ registrarUsuario);
+router.put("/actualizar/:id", /* validationToken, */ actualizarUsuario);
 
 export default router;

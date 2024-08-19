@@ -3,7 +3,7 @@ import BellIcon from "../icons/Bell";
 function NavBar() {
   return (
     <>
-      <nav className="h-20 flex w-full bg-white shadow-md text-slate-500 font-semibold">
+      <nav className="h-[70px] flex w-full bg-white shadow-md text-slate-500 font-semibold">
         <div className=" grid  grid-cols-[150px_80px_1fr] items-center w-[calc(350px)] ml-auto">
           <div className="">
             <p>Administrador</p>

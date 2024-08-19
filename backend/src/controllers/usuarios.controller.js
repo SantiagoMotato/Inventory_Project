@@ -58,11 +58,11 @@ export const registrarUsuario = async (req,res) => {
     const {identificacion,nombres,apellidos,email,telefono,password,estado,fk_tipo_usuario,fk_unidad_productiva} = req.body;
 
     const saltRounds = 10;
-    const encryptedPassword = await bcrypt.hash(password, saltRounds);
+    // const encryptedPassword = await bcrypt.hash(password, saltRounds);
     // password = encryptedPassword;
 
     const query = `INSERT INTO usuarios (identificacion,nombres,apellidos,email,telefono,password,estado,fk_tipo_usuario,fk_unidad_productiva) VALUES (?,?,?,?,?,?,?,?,?)`
-    const [result] = await pool.query(query,[identificacion,nombres,apellidos,email,telefono,encryptedPassword,estado,fk_tipo_usuario,fk_unidad_productiva])
+    const [result] = await pool.query(query,[identificacion,nombres,apellidos,email,telefono,password,estado,fk_tipo_usuario,fk_unidad_productiva])
 
     if(result.affectedRows > 0) {
       res.status(200).json({message: "Usuario registrado!"})

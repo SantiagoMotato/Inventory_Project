@@ -111,7 +111,7 @@ function App() {
   return (
     <>
       <Router>
-        <div className="flex max-h-screen bg-green-50">
+        <div className="flex max-h-screen w-full bg-green-50">
           <SideBar />
           <main className="w-full">
             <NavBar />

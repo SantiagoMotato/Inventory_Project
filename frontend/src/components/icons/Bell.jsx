@@ -48,7 +48,7 @@ function Bell() {
   return (
     <>
       <div
-        className="flex justify-center items-center w-12 h-12 rounded-full cursor-pointer hover:scale-90 hover:drop-shadow-2xl duration-300"
+        className="flex justify-center items-center w-12 h-12 rounded-full cursor-pointer hover:scale-90 hover:shadow-md duration-300"
         style={{ backgroundColor: "#59CE8F" }}>
         <FaBell className="w-7 h-7" style={{ color: "E8F9FD" }} />
       </div>

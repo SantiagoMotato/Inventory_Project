@@ -6,7 +6,7 @@ export const ListarUnidadesProductivas = async (req, res) => {
     const [result] = await pool.query(query);
 
     if (result.length > 0) {
-      res.status(200).json(result[0]);
+      res.status(200).json(result);
     } else {
       res
         .status(404)

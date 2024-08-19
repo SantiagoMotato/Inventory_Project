@@ -40,7 +40,7 @@ function SideBar() {
     <>
       <section className=''>
         <div className={`${openSideBar ? 'w-72':'w-20'} min-h-screen bg-white duration-700 shadow-2xl`}>
-            <div className='flex justify-end relative left-16 top-4'>
+            <div className='flex justify-end relative left-16 top-3'>
                 <AiOutlineMenu size={42} className='cursor-pointer hover:scale-90 duration-300 bg-slate-100 hover:bg-slate-200 text-gray-500 drop-shadow-md border-2 pt-2 pb-2 pl-1 pr-1 rounded-lg' onClick={handleClick}/>
             </div>
             <div className='flex relative bottom-8 items-center mr-2 ml-2 h-14 rounded-xl cursor-pointer'>
