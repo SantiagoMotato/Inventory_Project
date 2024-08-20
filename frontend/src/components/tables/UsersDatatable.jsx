@@ -369,7 +369,7 @@ useEffect(() => {
         )}
       </TableBody>
     </Table>
-    <RegistrarUsuario isOpen={isModalOpen} onOpen={handleOpenModal} onClose={handleCloseModal} />
+    <RegistrarUsuario isOpen={isModalOpen} onOpen={handleOpenModal} onClose={handleCloseModal} getUsuarios={getUsuarios}/>
     </div>
   );
 }
