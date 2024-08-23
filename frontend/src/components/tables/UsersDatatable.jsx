@@ -27,6 +27,7 @@ import {capitalize} from "../pages/utils";
 import axios from 'axios'
 import {useState, useEffect} from 'react'
 import RegistrarUsuario from '../modals/RegistrarUsuario'
+import ActualizarUsuario from '../modals/ActualizarUsuario'
 
 
 const statusColorMap = {
@@ -42,6 +43,14 @@ export default function App() {
   const [isModalOpen, setModalOpen] = useState(false);
   const handleOpenModal = () => setModalOpen(true);
   const handleCloseModal = () => setModalOpen(false);
+  const [isModalOpenUpdate, setModalOpenUpdate] = useState(false);
+  const handleOpenModalUpdate = (user) => {
+    setSelectedUser(user); // Guardar el usuario seleccionado
+    setModalOpenUpdate(true);
+    console.log(user);
+  };
+  const handleCloseModalUpdate = () => setModalOpenUpdate(false);
+  const [selectedUser, setSelectedUser] = useState(null);
 
 const [usuarios, setUsuarios] = useState([]);
 
@@ -170,7 +179,7 @@ useEffect(() => {
               </DropdownTrigger>
               <DropdownMenu>
                 <DropdownItem>View</DropdownItem>
-                <DropdownItem>Edit</DropdownItem>
+                <DropdownItem onClick={() => handleOpenModalUpdate(user)}>Edit</DropdownItem>
                 <DropdownItem>Delete</DropdownItem>
               </DropdownMenu>
             </Dropdown>
@@ -370,6 +379,7 @@ useEffect(() => {
       </TableBody>
     </Table>
     <RegistrarUsuario isOpen={isModalOpen} onOpen={handleOpenModal} onClose={handleCloseModal} getUsuarios={getUsuarios}/>
+    <ActualizarUsuario user={selectedUser} isOpen={isModalOpenUpdate} onClose={handleCloseModalUpdate}/>
     </div>
   );
 }
