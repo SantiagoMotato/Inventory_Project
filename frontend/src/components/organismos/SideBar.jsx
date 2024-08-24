@@ -49,7 +49,7 @@ function SideBar() {
             </div>
             <div className='fle flex-col relative gap-4 mt-12 mr-4 ml-4'>
                 {modulos.map((modulo, i) => (
-                    <Link to={modulo.link} key={i} className={`${openSideBar && 'hover:text-white hover:bg-[#3cb91c]'} group flex itmes-center text-sm gap-3.5 font-medium p-2 mt-6 hover:bg-[#AEFF8A] text-[#4BB71C] duration-150 rounded-md`}>
+                    <Link to={modulo.link} key={i} className={`${openSideBar && 'hover:text-white hover:bg-[#43c722]'} group flex itmes-center text-sm gap-3.5 font-medium p-2 mt-6 hover:bg-[#AEFF8A] text-[#4BB71C] duration-200 rounded-md`}>
 {/* relative left-8 */}
 {/* {`flex ${openSideBar && 'relative left-8 '}`} */}
                     <div className={`flex ${openSideBar && 'relative translate-x-8'} duration-500`} >
@@ -57,7 +57,7 @@ function SideBar() {
 
                         <h2 /* style={{
                         transitionDelay: `${i+3}00ms`
-                        }} */ className={`whitespace-pre duration-500 text-xl ml-4 mt-1  ${!openSideBar && 'opacity-0 translate-x-28 overflow-hidden'}`}>
+                        }} */ className={`whitespace-pre duration-200 text-xl ml-4 mt-1  ${!openSideBar && 'opacity-0 translate-x-28 overflow-hidden'}`}>
                           {modulo?.name}
                         </h2>
                       </div> 

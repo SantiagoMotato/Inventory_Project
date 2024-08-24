@@ -48,7 +48,7 @@ export const actualizarUsuario = async (req,res) => {
     }
     
   } catch (error) {
-      res.status(500).json({message:"Server Failure!"});
+      res.status(500).json({message:"Server Failure UPDATE!", error});
       // console.log(error.massage)
   }
 };
