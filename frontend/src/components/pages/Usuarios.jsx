@@ -1,7 +1,7 @@
 import React from 'react'
 import Datatable from '../tables/UsersDatatable'
-import ModalRegistrarUsuario from '../modals/RegistrarUsuario'
-import ModalActualizarUsuario from '../modals/ActualizarUsuario'
+// import ModalRegistrarUsuario from '../modals/RegistrarUsuario'
+// import ModalActualizarUsuario from '../modals/ActualizarUsuario'
 
 function Usuarios() {
   return (

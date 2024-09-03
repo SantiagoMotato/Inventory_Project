@@ -2,7 +2,7 @@ import { pool } from '../database/conection.js';
 
 export const ListarUbicaciones = async(req,res) => {
     try {
-        const query = "SELECT ubicaciones.*, ubicaciones.ambiente, ubicaciones.sitio FROM ubicaciones JOIN unidades_productivas ON unidades_productivas.id_unidad_productiva = ubicaciones.fk_unidad_productiva";
+        const query = "SELECT ubicaciones.*, ubicaciones.ambiente, ubicaciones.sitio, unidades_productivas.nombre_unidad_productiva FROM ubicaciones JOIN unidades_productivas ON unidades_productivas.id_unidad_productiva = ubicaciones.fk_unidad_productiva";
         const [result] = await pool.query(query);
 
         if(result.length > 0){
