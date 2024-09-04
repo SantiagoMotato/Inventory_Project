@@ -2,7 +2,7 @@ import {pool} from '../database/conection.js';
 
 export const listarMantenimientos = async(req,res) => {
     try {
-        const query = "SELECT * FROM mantenimientos";
+        const query = "SELECT mantenimientos. *, usuarios.nombres AS nombres_user_responsable, usuarios.apellidos AS apellidos_user_responsable, equipos.nombre_equipo FROM mantenimientos JOIN usuarios ON usuarios.id_usuario = mantenimientos.fk_user_responsable JOIN equipos ON equipos.id_equipo = mantenimientos.fk_equipo";
         const [result] = await pool.query(query);
 
         if(result.length > 0){

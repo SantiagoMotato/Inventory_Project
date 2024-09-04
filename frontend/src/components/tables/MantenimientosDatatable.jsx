@@ -17,17 +17,15 @@ import {
   Pagination,
 } from "@nextui-org/react";
 import { TfiPlus } from "react-icons/tfi";
-import { BsPersonFillCheck } from "react-icons/bs";
 import { IoFilterSharp } from "react-icons/io5";
-import { MdOutlinePersonSearch } from "react-icons/md";
-import { RiUserSettingsFill } from "react-icons/ri";
-import { RiUserSettingsLine } from "react-icons/ri";
-import {columns, /* users,  */statusOptions} from "../pages/data";
+import { TbSettingsSearch } from "react-icons/tb";
+import { FaEdit } from "react-icons/fa";
+import {columns, /* users,  */statusOptions} from "../tables/data/matenimientos";
 import {capitalize} from "../pages/utils";
 import axios from 'axios'
 import {useState, useEffect} from 'react'
-import ModalRegistrarUsuario from '../modals/UsersModals/RegistrarUsuario'
-import ModalActualizarUsuario from '../modals/UsersModals/ActualizarUsuario'
+import ModalRegistrarMantenimiento from '../modals/MantenimientosModals/ModalRegistrarMantenimiento'
+// import ModalActualizarUsuario from '../modals/UsersModals/ActualizarUsuario'
 
 
 const statusColorMap = {
@@ -36,37 +34,37 @@ const statusColorMap = {
   vacation: "warning",
 };
 
-const INITIAL_VISIBLE_COLUMNS = ["identificacion","nombres", "role", "nombre_unidad_productiva", "estado", "telefono", "actions"];
+const INITIAL_VISIBLE_COLUMNS = ["id_mantenimiento","tipo_mantenimiento","fecha_mantenimiento", "descripcion", "nombres_user_responsable", "nombre_equipo", "actions"];
 
 export default function App() {
 
   const [isModalOpen, setModalOpen] = useState(false);
   const handleOpenModal = () => setModalOpen(true);
   const handleCloseModal = () => setModalOpen(false);
-  const [isModalOpenUpdate, setModalOpenUpdate] = useState(false);
-  const handleOpenModalUpdate = (user) => {
-    setSelectedUser(user); // Guardar el usuario seleccionado
-    setModalOpenUpdate(true);
-    console.log(user);
-  };
-  const handleCloseModalUpdate = () => setModalOpenUpdate(false);
-  const [selectedUser, setSelectedUser] = useState(null);
+  // const [isModalOpenUpdate, setModalOpenUpdate] = useState(false);
+  // const handleOpenModalUpdate = (user) => {
+  //   setSelectedUser(user); // Guardar el usuario seleccionado
+  //   setModalOpenUpdate(true);
+  //   console.log(user);
+  // };
+  // const handleCloseModalUpdate = () => setModalOpenUpdate(false);
+  // const [selectedUser, setSelectedUser] = useState(null);
 
-const [usuarios, setUsuarios] = useState([]);
+const [mantenimientos, setMantenimientos] = useState([]);
 
-const getUsuarios = async() => {
+const getMantenimientos = async() => {
     try {
-        const res = await axios.get("http://localhost:4000/usuarios/listar");
+        const res = await axios.get("http://localhost:4000/mantenimientos/listar");
         const data = res.data;
-        setUsuarios(data);
+        setMantenimientos(data);
         console.log(data);
     } catch (error) {
-        console.log("Error al cargar los usuarios: ",error);
+        console.log("Error al cargar los mantenimientos: ",error);
     }
 }
 
 useEffect(() => {
-    getUsuarios();
+  getMantenimientos();
   }, []);
 
 
@@ -90,23 +88,24 @@ useEffect(() => {
   }, [visibleColumns]);
 
   const filteredItems = React.useMemo(() => {
-    let filteredUsers = [...usuarios];
+    let filteredUsers = [...mantenimientos];
 
     if (hasSearchFilter) {
-      filteredUsers = filteredUsers.filter((user) =>
-        user.nombres.toLowerCase().includes(filterValue.toLowerCase()) ||
-        user.apellidos.toLowerCase().includes(filterValue.toLowerCase()) ||
-        user.email.toLowerCase().includes(filterValue.toLowerCase())
+      filteredUsers = filteredUsers.filter((mantenimiento) =>
+        mantenimiento.descripcion.toLowerCase().includes(filterValue.toLowerCase()) ||
+        mantenimiento.nombre_equipo.toLowerCase().includes(filterValue.toLowerCase()) ||
+        mantenimiento.nombres_user_responsable.toLowerCase().includes(filterValue.toLowerCase()) ||
+        mantenimiento.apellidos_user_responsable.toLowerCase().includes(filterValue.toLowerCase())
       );
     }
     if (statusFilter !== "all" && Array.from(statusFilter).length !== statusOptions.length) {
-      filteredUsers = filteredUsers.filter((user) =>
-        Array.from(statusFilter).includes(user.status),
+      filteredUsers = filteredUsers.filter((mantenimiento) =>
+        Array.from(statusFilter).includes(mantenimiento.status),
       );
     }
 
     return filteredUsers;
-  }, [usuarios, filterValue, statusFilter]);
+  }, [mantenimientos, filterValue, statusFilter]);
 
   const pages = Math.ceil(filteredItems.length / rowsPerPage);
 
@@ -127,48 +126,52 @@ useEffect(() => {
     });
   }, [sortDescriptor, items]);
 
-  const renderCell = React.useCallback((user, columnKey) => {
-    const cellValue = user[columnKey];
+  const renderCell = React.useCallback((mantenimiento, columnKey) => {
+    const cellValue = mantenimiento[columnKey];
 
     switch (columnKey) {
-      case "nombres":
-        return (
-          <User
-            avatarProps={{radius: "lg", src: user.avatar}}
-            description={user.email}
-            // name={cellValue}
-            // name={cellValue + user.apellidos}
-            name={`${cellValue} ${user.apellidos}`}
-          >
-            {user.email}
-          </User>
-        );
-      case "role":
+      case "id_mantenimiento":
         return (
           <div className="flex flex-col">
             <p className="text-bold text-small capitalize">{cellValue}</p>
-            <p className="text-bold text-small capitalize text-default-500">{user.rol}</p>
+            {/* <p className="text-bold text-small capitalize text-default-500">{mantenimiento.id_mantenimiento}</p> */}
           </div>
         );
-      case "nombre_unidad_productiva":
+      case "tipo_mantenimiento":
+        return (
+          <div className="flex flex-col">
+            <p className="text-bold text-small capitalize">{cellValue}</p>
+            {/* <p className="text-bold text-small capitalize text-default-500">{mantenimiento.tipo_mantenimiento}</p> */}
+          </div>
+        );
+      case "fecha_mantenimiento":
         return (
           <div className="flex flex-col">
             {/* <p className="text-bold text-small capitalize">{cellValue}</p> */}
-            <p className="text-bold text-small capitalize text-default-500 bg-blue-100 rounded-md text-center">{user.nombre_unidad_productiva}</p>
+            <p className="text-bold text-small capitalize text-default-500 bg-blue-100 rounded-md text-center">{mantenimiento.fecha_mantenimiento}</p>
           </div>
         );
-        case "telefono":
+        case "descripcion":
           return (
             <div className="flex flex-col">
               {/* <p className="text-bold text-small capitalize">{cellValue}</p> */}
-              <p className="text-bold text-small capitalize text-default-500">{user.telefono}</p>
+              <p className="text-bold text-small capitalize text-default-500 bg-slate-100 p-1">{mantenimiento.descripcion}</p>
             </div>
           );
-      case "estado":
+      case "nombres_user_responsable":
         return (
-          <Chip className="capitalize" color={statusColorMap[user.estado]} size="sm" variant="flat">
-            {cellValue}
-          </Chip>
+          <div className="flex flex-col">
+          {/* <p className="text-bold text-small capitalize">{cellValue}</p> */}
+          <p className="text-bold text-small capitalize text-default-700">{mantenimiento.nombres_user_responsable}</p>
+          <p className="text-bold text-small capitalize text-default-500">{mantenimiento.apellidos_user_responsable}</p>
+          </div>
+        );
+      case "nombre_equipo":
+        return (
+          <div className="flex flex-col">
+          {/* <p className="text-bold text-small capitalize">{cellValue}</p> */}
+          <p className="relative right-4 text-bold text-small text-center capitalize text-default-500 py-1 px-1 bg-teal-100 rounded-md">{mantenimiento.nombre_equipo}</p>
+          </div>
         );
       case "actions":
         return (
@@ -176,12 +179,12 @@ useEffect(() => {
             <Dropdown>
               <DropdownTrigger>
                 <Button isIconOnly size="sm" variant="light">
-                  <RiUserSettingsLine className="text-default-500 text-2xl mr-2" />
+                  <FaEdit className="text-default-400 text-2xl ml-1" />
                 </Button>
               </DropdownTrigger>
               <DropdownMenu>
                 <DropdownItem>View</DropdownItem>
-                <DropdownItem onClick={() => handleOpenModalUpdate(user)}>Edit</DropdownItem>
+                <DropdownItem onClick={() => console.log(mantenimiento)}>Edit</DropdownItem>
                 <DropdownItem>Delete</DropdownItem>
               </DropdownMenu>
             </Dropdown>
@@ -230,14 +233,14 @@ useEffect(() => {
           <Input
             isClearable
             className="w-full sm:max-w-[44%]"
-            placeholder="Buscar usuario..."
-            startContent={<MdOutlinePersonSearch className="text-2xl text-default-500"/>}
+            placeholder="Buscar mantenimiento..."
+            startContent={<TbSettingsSearch className="text-2xl text-default-500"/>}
             value={filterValue}
             onClear={() => onClear()}
             onValueChange={onSearchChange}
           />
           <div className="flex gap-3">
-            <Dropdown>
+            {/* <Dropdown>
               <DropdownTrigger className="hidden sm:flex">
                 <Button endContent={<BsPersonFillCheck className="text-lg" />} variant="flat">
                   Status
@@ -257,7 +260,7 @@ useEffect(() => {
                   </DropdownItem>
                 ))}
               </DropdownMenu>
-            </Dropdown>
+            </Dropdown> */}
             <Dropdown>
               <DropdownTrigger className="hidden sm:flex">
                 <Button endContent={<IoFilterSharp className="text-lg" />} variant="flat">
@@ -281,12 +284,12 @@ useEffect(() => {
             </Dropdown>
             <Button className="bg-[#8bddbc] text-md" onClick={handleOpenModal} /* color="primary"  *//* endContent={<FaUsers />} */>
             <TfiPlus size={20}/>
-              Usuario
+              Mantenimiento
             </Button>
           </div>
         </div>
         <div className="flex justify-between items-center">
-          <span className="text-default-400 text-small">Total {usuarios.length} usuarios</span>
+          <span className="text-default-400 text-small">Total: {mantenimientos.length} mantenimientos</span>
           <label className="flex items-center text-default-400 text-small">
             Rows per page:
             <select
@@ -306,7 +309,7 @@ useEffect(() => {
     statusFilter,
     visibleColumns,
     onRowsPerPageChange,
-    usuarios.length,
+    mantenimientos.length,
     onSearchChange,
     hasSearchFilter,
   ]);
@@ -372,16 +375,16 @@ useEffect(() => {
             </TableColumn>
           )}
         </TableHeader>
-        <TableBody emptyContent={"No users found"} items={sortedItems}>
+        <TableBody emptyContent={"Mantenimiento No Encontrado!"} items={sortedItems}>
           {(item) => (
-            <TableRow key={item.id_usuario}>
+            <TableRow key={item.id_mantenimiento}>
               {(columnKey) => <TableCell>{renderCell(item, columnKey)}</TableCell>}
             </TableRow>
           )}
         </TableBody>
       </Table>
-      <ModalRegistrarUsuario isOpen={isModalOpen} onOpen={handleOpenModal} onClose={handleCloseModal} getUsuarios={getUsuarios}/>
-      <ModalActualizarUsuario user={selectedUser} isOpen={isModalOpenUpdate} onClose={handleCloseModalUpdate} getUsuarios={getUsuarios}/>
+      <ModalRegistrarMantenimiento isOpen={isModalOpen} onOpen={handleOpenModal} onClose={handleCloseModal}/>
+      {/* <ModalActualizarUsuario user={selectedUser} isOpen={isModalOpenUpdate} onClose={handleCloseModalUpdate} getUsuarios={getUsuarios}/> */}
     </div>
   );
 }
