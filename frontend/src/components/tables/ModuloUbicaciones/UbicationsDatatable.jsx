@@ -20,12 +20,12 @@ import { TfiPlus } from "react-icons/tfi";
 import { IoFilterSharp } from "react-icons/io5";
 import { FaSearchLocation } from "react-icons/fa";
 import { FaEdit } from "react-icons/fa";
-import {columns, /* users,  */statusOptions} from "../tables/data/ubicacionesData";
-import {capitalize} from "../pages/utils";
+import {columns, /* users,  */statusOptions} from "../data/ubicacionesData";
+import {capitalize} from "../../pages/utils";
 import axios from 'axios'
 import {useState, useEffect} from 'react'
-import ModalRegistrarUbicacion from '../modals/UbicationsModals/ModalRegistrarUbicacion'
-import ModalActualizarUbicacion from '../modals/UbicationsModals/ModalActualizarUbicacion'
+import ModalRegistrarUbicacion from '../../modals/UbicationsModals/ModalRegistrarUbicacion'
+import ModalActualizarUbicacion from '../../modals/UbicationsModals/ModalActualizarUbicacion'
 
 
 const statusColorMap = {

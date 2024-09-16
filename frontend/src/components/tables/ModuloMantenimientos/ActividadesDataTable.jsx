@@ -18,16 +18,13 @@ import {
 } from "@nextui-org/react";
 import { TfiPlus } from "react-icons/tfi";
 import { IoFilterSharp } from "react-icons/io5";
-import { TbSettingsSearch } from "react-icons/tb";
+import { FaSearch } from "react-icons/fa";
 import { FaEdit } from "react-icons/fa";
-import {columns, /* users,  */statusOptions} from "../tables/data/matenimientos";
-import {capitalize} from "../pages/utils";
+import {columns, /* users,  */statusOptions} from "../data/actividadesData";
+import {capitalize} from "../../pages/utils";
 import axios from 'axios'
 import {useState, useEffect} from 'react'
-import ModalRegistrarMantenimiento from '../modals/MantenimientosModals/ModalRegistrarMantenimiento'
-import ModalActualizarMantenimiento from '../modals/MantenimientosModals/ModalActualizarMantenimiento'
-import ModalRegistrarActividad from '../modals/MantenimientosModals/ActividadesModals/ModalRegistrarActividad'
-
+import ModalActualizarActividad from '../../modals/MantenimientosModals/ActividadesModals/ModalActualizarActividad'
 
 const statusColorMap = {
   activo: "success",
@@ -35,46 +32,35 @@ const statusColorMap = {
   vacation: "warning",
 };
 
-const INITIAL_VISIBLE_COLUMNS = ["id_mantenimiento","tipo_mantenimiento","fecha_mantenimiento", "descripcion", "nombres_user_responsable", "nombre_equipo", "actions"];
+const INITIAL_VISIBLE_COLUMNS = ["id_actividad", "fecha_actividad", "descripcion", "fk_mantenimiento", "fk_tecnico", "fk_equipo", "fk_user_responsable", "actions"];
 
-export default function App() {
+export default function ActividadesDataTable() {
 
-  const [selectedMantenimiento, setSelectedMantenimiento] = useState(null);
-  const [selectedIDMantenimiento, setSelectedIDMantenimiento] = useState(null);
-  const [isModalOpen, setModalOpen] = useState(false);
-  const handleOpenModal = () => setModalOpen(true);
-  const handleCloseModal = () => setModalOpen(false);
-
-  const [isModalOpenActividad, setModalOpenActividad] = useState(false);
-  const handleOpenModalActividad = (mantenimiento) => {
-    setModalOpenActividad(true);
-    setSelectedIDMantenimiento(mantenimiento.id_mantenimiento);
-  }
-  const handleCloseModalActividad = () => setModalOpenActividad(false);
-  
+  //Estados para abrir solo el formulario para actualizar una actividad
+  const [selectedActividad, setSelectedActividad] = useState(null);
   const [isModalOpenUpdate, setModalOpenUpdate] = useState(false);
-  const handleOpenModalUpdate = (mantenimiento) => {
-    setSelectedMantenimiento(mantenimiento);
+  const handleOpenModalUpdate = (actividad) => {
+    setSelectedActividad(actividad);
     setModalOpenUpdate(true);
-    console.log(mantenimiento);
+    console.log(actividad);
   };
   const handleCloseModalUpdate = () => setModalOpenUpdate(false);
 
-const [mantenimientos, setMantenimientos] = useState([]);
+const [actividades, setActividades] = useState([]);
 
-const getMantenimientos = async() => {
+const getActividades = async() => {
     try {
-        const res = await axios.get("http://localhost:4000/mantenimientos/listar");
+        const res = await axios.get("http://localhost:4000/actividades/listar");
         const data = res.data;
-        setMantenimientos(data);
-        // console.log(data);
+        setActividades(data);
+        console.log(data);
     } catch (error) {
-        console.log("Error al cargar los mantenimientos: ",error);
+        console.log("Error al cargar las actividades: ",error);
     }
 }
 
 useEffect(() => {
-  getMantenimientos();
+  getActividades();
   }, []);
 
 
@@ -98,24 +84,24 @@ useEffect(() => {
   }, [visibleColumns]);
 
   const filteredItems = React.useMemo(() => {
-    let filteredUsers = [...mantenimientos];
+    let filteredUsers = [...actividades];
 
     if (hasSearchFilter) {
-      filteredUsers = filteredUsers.filter((mantenimiento) =>
-        mantenimiento.descripcion.toLowerCase().includes(filterValue.toLowerCase()) ||
-        mantenimiento.nombre_equipo.toLowerCase().includes(filterValue.toLowerCase()) ||
-        mantenimiento.nombres_user_responsable.toLowerCase().includes(filterValue.toLowerCase()) ||
-        mantenimiento.apellidos_user_responsable.toLowerCase().includes(filterValue.toLowerCase())
+      filteredUsers = filteredUsers.filter((actividad) =>
+        actividad.descripcion.toLowerCase().includes(filterValue.toLowerCase()) ||
+        actividad.nombre_equipo.toLowerCase().includes(filterValue.toLowerCase()) ||
+        actividad.nombres_responsable.toLowerCase().includes(filterValue.toLowerCase()) ||
+        actividad.apellidos_responsable.toLowerCase().includes(filterValue.toLowerCase())
       );
     }
     if (statusFilter !== "all" && Array.from(statusFilter).length !== statusOptions.length) {
-      filteredUsers = filteredUsers.filter((mantenimiento) =>
-        Array.from(statusFilter).includes(mantenimiento.status),
+      filteredUsers = filteredUsers.filter((actividad) =>
+        Array.from(statusFilter).includes(actividad.status),
       );
     }
 
     return filteredUsers;
-  }, [mantenimientos, filterValue, statusFilter]);
+  }, [actividades, filterValue, statusFilter]);
 
   const pages = Math.ceil(filteredItems.length / rowsPerPage);
 
@@ -136,11 +122,11 @@ useEffect(() => {
     });
   }, [sortDescriptor, items]);
 
-  const renderCell = React.useCallback((mantenimiento, columnKey) => {
-    const cellValue = mantenimiento[columnKey];
+  const renderCell = React.useCallback((actividad, columnKey) => {
+    const cellValue = actividad[columnKey];
 
     switch (columnKey) {
-      case "id_mantenimiento":
+      case "id_actividad":
         return (
           <div className="flex flex-col">
             <p className="text-bold text-small capitalize">{cellValue}</p>
@@ -150,37 +136,50 @@ useEffect(() => {
       case "tipo_mantenimiento":
         return (
           <div className="flex flex-col">
-            <p className="text-bold text-small capitalize">{cellValue}</p>
-            {/* <p className="text-bold text-small capitalize text-default-500">{mantenimiento.tipo_mantenimiento}</p> */}
+            {/* <p className="text-bold text-small capitalize">{cellValue}</p> */}
+            <p className="text-bold text-small capitalize text-default-500">{actividad.tipo_mantenimiento}</p>
           </div>
         );
-      case "fecha_mantenimiento":
+      case "fecha_actividad":
         return (
           <div className="flex flex-col">
             {/* <p className="text-bold text-small capitalize">{cellValue}</p> */}
-            <p className="text-bold text-small capitalize text-default-500 bg-blue-100 rounded-md text-center">{mantenimiento.fecha_mantenimiento}</p>
+            <p className="text-bold text-small capitalize text-default-700 rounded-md text-center">{actividad.fecha_actividad}</p>
           </div>
         );
         case "descripcion":
           return (
             <div className="flex flex-col">
               {/* <p className="text-bold text-small capitalize">{cellValue}</p> */}
-              <p className="text-bold text-small capitalize text-default-500 bg-slate-100 p-1">{mantenimiento.descripcion}</p>
+              <p className="text-bold text-small capitalize text-default-600 bg-slate-100 p-1">{actividad.descripcion}</p>
             </div>
           );
-      case "nombres_user_responsable":
+      case "fk_mantenimiento":
         return (
           <div className="flex flex-col">
           {/* <p className="text-bold text-small capitalize">{cellValue}</p> */}
-          <p className="text-bold text-small capitalize text-default-700">{mantenimiento.nombres_user_responsable}</p>
-          <p className="text-bold text-small capitalize text-default-500">{mantenimiento.apellidos_user_responsable}</p>
+          <p className="text-bold text-small capitalize text-default-700">{actividad.fk_mantenimiento}</p>
           </div>
         );
-      case "nombre_equipo":
+      case "fk_tecnico":
         return (
           <div className="flex flex-col">
           {/* <p className="text-bold text-small capitalize">{cellValue}</p> */}
-          <p className="relative right-4 text-bold text-small text-center capitalize text-default-500 py-1 px-1 bg-teal-100 rounded-md">{mantenimiento.nombre_equipo}</p>
+          <p className="relative right-4 text-bold text-small text-center capitalize text-default-700 py-1 px-1 bg-teal-100 rounded-md">{`${actividad.nombres_tecnico} ${actividad.apellidos_tecnico}`}</p>
+          </div>
+        );
+      case "fk_equipo":
+        return (
+          <div className="flex flex-col">
+          {/* <p className="text-bold text-small capitalize">{cellValue}</p> */}
+          <p className="relative right-4 text-bold text-small text-center capitalize text-default-700 py-1 px-1">{actividad.nombre_equipo}</p>
+          </div>
+        );
+      case "fk_user_responsable":
+        return (
+          <div className="flex flex-col">
+          {/* <p className="text-bold text-small capitalize">{cellValue}</p> */}
+          <p className="relative right-4 text-bold text-small text-center capitalize text-default-700 py-1 px-1 bg-teal-100 rounded-md">{`${actividad.nombres_responsable} ${actividad.apellidos_responsable}`}</p>
           </div>
         );
       case "actions":
@@ -193,8 +192,8 @@ useEffect(() => {
                 </Button>
               </DropdownTrigger>
               <DropdownMenu>
-                <DropdownItem onClick={/* ()=>console.log(mantenimiento) */() => handleOpenModalActividad(mantenimiento)/* ()=>alert(mantenimiento.id_mantenimiento) */}>Registrar actividad</DropdownItem>
-                <DropdownItem onClick={ () => handleOpenModalUpdate(mantenimiento)/* () => console.log(mantenimiento) */}>Editar</DropdownItem>
+                <DropdownItem>View</DropdownItem>
+                <DropdownItem onClick={() => handleOpenModalUpdate(actividad)/* () => console.log(actividad) */}>Editar</DropdownItem>
                 <DropdownItem>Delete</DropdownItem>
               </DropdownMenu>
             </Dropdown>
@@ -243,34 +242,13 @@ useEffect(() => {
           <Input
             isClearable
             className="w-full sm:max-w-[44%]"
-            placeholder="Buscar mantenimiento..."
-            startContent={<TbSettingsSearch className="text-2xl text-default-500"/>}
+            placeholder="Buscar actividad..."
+            startContent={<FaSearch className="text-xl text-default-500"/>}
             value={filterValue}
             onClear={() => onClear()}
             onValueChange={onSearchChange}
           />
           <div className="flex gap-3">
-            {/* <Dropdown>
-              <DropdownTrigger className="hidden sm:flex">
-                <Button endContent={<BsPersonFillCheck className="text-lg" />} variant="flat">
-                  Status
-                </Button>
-              </DropdownTrigger>
-              <DropdownMenu
-                disallowEmptySelection
-                aria-label="Table Columns"
-                closeOnSelect={false}
-                selectedKeys={statusFilter}
-                selectionMode="multiple"
-                onSelectionChange={setStatusFilter}
-              >
-                {statusOptions.map((status) => (
-                  <DropdownItem key={status.uid} className="capitalize">
-                    {capitalize(status.name)}
-                  </DropdownItem>
-                ))}
-              </DropdownMenu>
-            </Dropdown> */}
             <Dropdown>
               <DropdownTrigger className="hidden sm:flex">
                 <Button endContent={<IoFilterSharp className="text-lg" />} variant="flat">
@@ -292,14 +270,10 @@ useEffect(() => {
                 ))}
               </DropdownMenu>
             </Dropdown>
-            <Button className="bg-[#8bddbc] text-md" onClick={handleOpenModal} /* color="primary"  *//* endContent={<FaUsers />} */>
-            <TfiPlus size={20}/>
-              Mantenimiento
-            </Button>
           </div>
         </div>
         <div className="flex justify-between items-center">
-          <span className="text-default-400 text-small">Total: {mantenimientos.length} mantenimientos</span>
+          <span className="text-default-400 text-small">Total: {actividades.length} actividades</span>
           <label className="flex items-center text-default-400 text-small">
             Rows per page:
             <select
@@ -319,7 +293,7 @@ useEffect(() => {
     statusFilter,
     visibleColumns,
     onRowsPerPageChange,
-    mantenimientos.length,
+    actividades.length,
     onSearchChange,
     hasSearchFilter,
   ]);
@@ -382,17 +356,15 @@ useEffect(() => {
             </TableColumn>
           )}
         </TableHeader>
-        <TableBody emptyContent={"Mantenimiento No Encontrado!"} items={sortedItems}>
+        <TableBody emptyContent={"Actividad No Encontrado!"} items={sortedItems}>
           {(item) => (
-            <TableRow key={item.id_mantenimiento}>
+            <TableRow key={item.id_actividad}>
               {(columnKey) => <TableCell>{renderCell(item, columnKey)}</TableCell>}
             </TableRow>
           )}
         </TableBody>
       </Table>
-      <ModalRegistrarMantenimiento isOpen={isModalOpen} onOpen={handleOpenModal} onClose={handleCloseModal} getMantenimientos={getMantenimientos}/>
-      <ModalActualizarMantenimiento mantenimiento={selectedMantenimiento} isOpen={isModalOpenUpdate} onOpen={handleOpenModalUpdate} onClose={handleCloseModalUpdate} getMantenimientosUpdate={getMantenimientos}/>
-      <ModalRegistrarActividad mantenimientoID={selectedIDMantenimiento} isOpen={isModalOpenActividad} onOpen={handleOpenModalActividad} onClose={handleCloseModalActividad}/>
+      <ModalActualizarActividad actividad={selectedActividad} isOpen={isModalOpenUpdate} onOpen={handleOpenModalUpdate} onClose={handleCloseModalUpdate} getActividades={getActividades}/>
     </div>
   );
 }

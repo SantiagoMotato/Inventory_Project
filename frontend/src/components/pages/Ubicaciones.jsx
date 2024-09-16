@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import UbicacionesDatatable from "../tables/UbicationsDatatable";
-import UnidadesProductivasDatatable from '../tables/UnidadesProductivasDatable'
+import UbicacionesDatatable from "../tables/ModuloUbicaciones/UbicationsDatatable";
+import UnidadesProductivasDatatable from '../tables/ModuloUbicaciones/UnidadesProductivasDatable'
 import { Tabs, Tab } from "@nextui-org/react";
 
 function Ubicaciones() {

@@ -8,20 +8,16 @@ import { FaCheckCircle } from "react-icons/fa";
 import { IoIosWarning } from "react-icons/io";
 
 function RegistrarUbicacion({ isOpen, onOpen, onClose, getUbicaciones }) {
-  // const { isOpen, onOpen, onClose } = useDisclosure();
-  const [size, setSize] = React.useState("md");
 
+  const [size, setSize] = React.useState("md");
   const sizes = ["3xl"];
   const variants = ["underlined"];
-
-
 
   const [ambiente, setAmbientes] = useState([]);
   const [sitio, setSitios] = useState([]);
   const [unidadesProductivas, setUnidadesProductivas] = useState([]);
   const [fk_unidad_productiva, setFkUnidadProductiva] = useState("");
   const [validationMessages, setValidationMessages] = useState("");
-
 
   const limpiarFormulario = () => {
     setAmbientes("");
@@ -47,7 +43,6 @@ function RegistrarUbicacion({ isOpen, onOpen, onClose, getUbicaciones }) {
       throw error; 
     }
   };
-
 
   const getUnidadesProductivas = async() =>{
     try {
@@ -123,14 +118,15 @@ function RegistrarUbicacion({ isOpen, onOpen, onClose, getUbicaciones }) {
                           type="text"
                           variant="underlined"
                           label="Ambiente"
+                          name="ambiente"
                           value={ambiente}
-                          onChange={(e) =>  (e.target.value)}
+                          onChange={(e) => setAmbientes(e.target.value)}
                         />
                       </div>
                         {
-                          validationMessages && validationMessages.some(([campo]) => campo === 'identificacion') && (
+                          validationMessages && validationMessages.some(([campo]) => campo === 'ambiente') && (
                             <p className="text-xs text-red-600 font-semibold">
-                              {validationMessages.find(([campo]) => campo === 'identificacion')[1]}
+                              {validationMessages.find(([campo]) => campo === 'ambiente')[1]}
                             </p>
                           )
                         }

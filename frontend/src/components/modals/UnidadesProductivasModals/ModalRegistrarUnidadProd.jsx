@@ -33,7 +33,6 @@ function RegistrarUnidadProductiva({ isOpen, onOpen, onClose, getUnidadesProduct
     } catch (error) {
       setValidationMessages(error.response.data.msg);
       console.log(error);
-
       throw error; 
     }
   };

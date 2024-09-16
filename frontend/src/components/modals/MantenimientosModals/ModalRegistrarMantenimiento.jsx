@@ -8,18 +8,18 @@ import { FaCheckCircle } from "react-icons/fa";
 import { IoIosWarning } from "react-icons/io";
 import {Textarea} from "@nextui-org/react";
 
-function RegistrarMantenimiento({ isOpen, onOpen, onClose, getUsuarios }) {
+function RegistrarMantenimiento({ isOpen, onOpen, onClose, getMantenimientos }) {
   // const { isOpen, onOpen, onClose } = useDisclosure();
   const [size, setSize] = React.useState("md");
 
   const sizes = ["4xl"];
   const variants = ["underlined"];
 
-  const [tipoMantenimiento, setTipoMantenimiento] = useState("");
-  const [fechaMantenimiento, setFechaMantenimiento] = useState("");
+  const [tipo_mantenimiento, setTipoMantenimiento] = useState("");
+  const [fecha_mantenimiento, setFechaMantenimiento] = useState("");
   const [descripcion, setDescripcion] = useState("");
-  const [responsable, setResponsable] = useState("");
-  const [equipo, setEquipo] = useState("");
+  const [fk_user_responsable, setResponsable] = useState("");
+  const [fk_equipo, setEquipo] = useState("");
 
   const [usersResponsable, setUserResponsable] = useState("");
   const [equipos, setEquipos] = useState("");
@@ -39,11 +39,11 @@ function RegistrarMantenimiento({ isOpen, onOpen, onClose, getUsuarios }) {
     try {
 
       const res = await axios.post("http://localhost:4000/mantenimientos/registrar", {
-        tipoMantenimiento,
-        fechaMantenimiento,
+        tipo_mantenimiento,
+        fecha_mantenimiento,
         descripcion,
-        responsable,
-        equipo
+        fk_user_responsable,
+        fk_equipo
       });
       const data = res.data;
       console.log("Mantenimiento registrado:", data);
@@ -62,7 +62,7 @@ function RegistrarMantenimiento({ isOpen, onOpen, onClose, getUsuarios }) {
       const res = await axios.get("http://localhost:4000/usuarios/listar");
       const data = res.data;
       setUserResponsable(data);
-      console.log(data);
+      // console.log(data);
     } catch (error) {
       console.log("Error al traer los usuarios: ",error);
     }
@@ -73,7 +73,7 @@ function RegistrarMantenimiento({ isOpen, onOpen, onClose, getUsuarios }) {
       const res = await axios.get("http://localhost:4000/equipos/listar");
       const data = res.data;
       setEquipos(data);
-      console.log(data);
+      // console.log(data);
     } catch (error) {
       console.log("Error al traer los equipos: ",error);
     }
@@ -83,11 +83,11 @@ function RegistrarMantenimiento({ isOpen, onOpen, onClose, getUsuarios }) {
   const SubmitRegistrarMantenimiento = async(event) => {
     event.preventDefault();
     if (
-      !tipoMantenimiento ||
-      !fechaMantenimiento ||
+      !tipo_mantenimiento ||
+      !fecha_mantenimiento ||
       !descripcion ||
-      !responsable ||
-      !equipo
+      !fk_user_responsable ||
+      !fk_equipo
     ) {
       toast.warning('Por favor, completa todos los campos requeridos!',  {
         style: {height:"90px", fontSize: '15px',},
@@ -97,15 +97,16 @@ function RegistrarMantenimiento({ isOpen, onOpen, onClose, getUsuarios }) {
       return;
     }
     console.log({
-    tipoMantenimiento,
-    fechaMantenimiento,
+    tipo_mantenimiento,
+    fecha_mantenimiento,
     descripcion,
-    responsable,
-    equipo
+    fk_user_responsable,
+    fk_equipo
     });
     try {
       await postMantenimiento();
       onClose();
+      getMantenimientos();
       toast.success('Mantenimiento Registrado!',  {
           description: "El mantenimiento ha sido registrado con éxito!",
           icon: <FaCheckCircle className="text-green-500 text-xl"/>,
@@ -142,7 +143,7 @@ function RegistrarMantenimiento({ isOpen, onOpen, onClose, getUsuarios }) {
                           <Select 
                             variant={variant}
                             label="Tipo Mantenimiento"
-                            value={tipoMantenimiento} // Esto debería ser el valor seleccionado del estado
+                            value={tipo_mantenimiento} // Esto debería ser el valor seleccionado del estado
                             onChange={(e) => setTipoMantenimiento(e.target.value)} 
                             className="max-w-xs" 
                           >
@@ -154,13 +155,6 @@ function RegistrarMantenimiento({ isOpen, onOpen, onClose, getUsuarios }) {
                           </Select>
                         </div>
                       ))}  
-                      {
-                          validationMessages && validationMessages.some(([campo]) => campo === 'estado') && (
-                            <p className="text-xs text-red-600 font-semibold">
-                              {validationMessages.find(([campo]) => campo === 'estado')[1]}
-                            </p>
-                          )
-                        }
                     </div>
                     <div className="w-full flex flex-col">
                       <div className="flex w-80 flex-wrap md:flex-nowrap mb-6 md:mb-0 gap-4">
@@ -168,7 +162,7 @@ function RegistrarMantenimiento({ isOpen, onOpen, onClose, getUsuarios }) {
                           type="date"
                           variant="underlined"
                           label="Fecha Mantenimiento"
-                          value={fechaMantenimiento}
+                          value={fecha_mantenimiento}
                           onChange={(e) => setFechaMantenimiento(e.target.value)}
                         />
                       </div>
@@ -188,13 +182,12 @@ function RegistrarMantenimiento({ isOpen, onOpen, onClose, getUsuarios }) {
                           label="Descripción"
                           value={descripcion}
                           onChange={(e) => setDescripcion(e.target.value)}
-                          
                         />
                       </div>
                       {
-                          validationMessages && validationMessages.some(([campo]) => campo === 'nombres') && (
+                          validationMessages && validationMessages.some(([campo]) => campo === 'descripcion') && (
                             <p className="text-xs text-red-600 font-semibold">
-                              {validationMessages.find(([campo]) => campo === 'nombres')[1]}
+                              {validationMessages.find(([campo]) => campo === 'descripcion')[1]}
                             </p>
                           )
                         }
@@ -205,7 +198,7 @@ function RegistrarMantenimiento({ isOpen, onOpen, onClose, getUsuarios }) {
                           <Select 
                             variant={variant}
                             label="Responsable"
-                            value={responsable} // Esto debería ser el valor seleccionado del estado
+                            value={fk_user_responsable} // Esto debería ser el valor seleccionado del estado
                             onChange={(e) => setResponsable(e.target.value)} 
                             className="max-w-xs" 
                           >
@@ -231,7 +224,7 @@ function RegistrarMantenimiento({ isOpen, onOpen, onClose, getUsuarios }) {
                           <Select 
                             variant={variant}
                             label="Equipo"
-                            value={equipo} // Esto debería ser el valor seleccionado del estado
+                            value={fk_equipo} // Esto debería ser el valor seleccionado del estado
                             onChange={(e) => setEquipo(e.target.value)} 
                             className="max-w-xs" 
                           >

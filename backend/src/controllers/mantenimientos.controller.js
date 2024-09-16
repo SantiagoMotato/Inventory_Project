@@ -1,20 +1,27 @@
 import {pool} from '../database/conection.js';
 
-export const listarMantenimientos = async(req,res) => {
+export const listarMantenimientos = async(req, res) => {
     try {
-        const query = "SELECT mantenimientos. *, usuarios.nombres AS nombres_user_responsable, usuarios.apellidos AS apellidos_user_responsable, equipos.nombre_equipo FROM mantenimientos JOIN usuarios ON usuarios.id_usuario = mantenimientos.fk_user_responsable JOIN equipos ON equipos.id_equipo = mantenimientos.fk_equipo";
+        const query = "SELECT mantenimientos.*, usuarios.nombres AS nombres_user_responsable, usuarios.apellidos AS apellidos_user_responsable, equipos.nombre_equipo FROM mantenimientos JOIN usuarios ON usuarios.id_usuario = mantenimientos.fk_user_responsable JOIN equipos ON equipos.id_equipo = mantenimientos.fk_equipo";
         const [result] = await pool.query(query);
 
-        if(result.length > 0){
-            res.status(200).json(result);
-        }else{
-            res.status(404).json({message:"No Maintenances Found!"})
+        // Formatear la fecha en el servidor (JavaScript)
+        const mantenimientosConFechaFormateada = result.map(mantenimiento => ({
+            ...mantenimiento,
+            fecha_mantenimiento: new Date(mantenimiento.fecha_mantenimiento).toISOString().split('T')[0]
+        }));
+
+        if (result.length > 0) {
+            res.status(200).json(mantenimientosConFechaFormateada);
+        } else {
+            res.status(404).json({ message: "No Maintenances Found!" });
         }
-        
     } catch (error) {
-        console.log(error.message)
+        console.log(error.message);
+        res.status(500).json({ message: "Server error" });
     }
 };
+
 
 export const listarMantenimiento = async(req,res) => {
     try {

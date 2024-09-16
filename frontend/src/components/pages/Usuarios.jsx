@@ -1,5 +1,5 @@
 import React from 'react'
-import Datatable from '../tables/UsersDatatable'
+import Datatable from '../tables/ModuloUsuarios/UsersDatatable'
 // import ModalRegistrarUsuario from '../modals/RegistrarUsuario'
 // import ModalActualizarUsuario from '../modals/ActualizarUsuario'
 

@@ -17,18 +17,15 @@ import {
   Pagination,
 } from "@nextui-org/react";
 import { TfiPlus } from "react-icons/tfi";
-import { BsPersonFillCheck } from "react-icons/bs";
 import { IoFilterSharp } from "react-icons/io5";
-import { MdOutlinePersonSearch } from "react-icons/md";
-import { RiUserSettingsFill } from "react-icons/ri";
-import { RiUserSettingsLine } from "react-icons/ri";
-import {columns, /* users,  */statusOptions} from "../pages/data";
-import {capitalize} from "../pages/utils";
+import { FaEdit } from "react-icons/fa";
+import { FaSearch } from "react-icons/fa";
+import {columns, /* users,  */statusOptions} from "../data/unidadesProductivasData";
+import {capitalize} from "../../pages/utils";
 import axios from 'axios'
 import {useState, useEffect} from 'react'
-import ModalRegistrarUsuario from '../modals/UsersModals/RegistrarUsuario'
-import ModalActualizarUsuario from '../modals/UsersModals/ActualizarUsuario'
-
+import ModalRegistrarUnidadProductiva from '../../modals/UnidadesProductivasModals/ModalRegistrarUnidadProd'
+import ModalActualizarUnidadProductiva from '../../modals/UnidadesProductivasModals/ModalActualizarUnidadProductiva'
 
 const statusColorMap = {
   activo: "success",
@@ -36,7 +33,7 @@ const statusColorMap = {
   vacation: "warning",
 };
 
-const INITIAL_VISIBLE_COLUMNS = ["identificacion","nombres", "role", "nombre_unidad_productiva", "estado", "telefono", "actions"];
+const INITIAL_VISIBLE_COLUMNS = ["fk_unidad_productiva","actions"];
 
 export default function App() {
 
@@ -44,29 +41,29 @@ export default function App() {
   const handleOpenModal = () => setModalOpen(true);
   const handleCloseModal = () => setModalOpen(false);
   const [isModalOpenUpdate, setModalOpenUpdate] = useState(false);
-  const handleOpenModalUpdate = (user) => {
-    setSelectedUser(user); // Guardar el usuario seleccionado
+  const handleOpenModalUpdate = (unidadProductiva) => {
+    SetSelectedUnidadProductiva(unidadProductiva); // Guardar el usuario seleccionado
     setModalOpenUpdate(true);
-    console.log(user);
+    console.log(unidadProductiva);
   };
   const handleCloseModalUpdate = () => setModalOpenUpdate(false);
-  const [selectedUser, setSelectedUser] = useState(null);
+  
+  const [unidadesProductivas, setUnidadesProductivas] = useState([]);
+  const [selectedUnidadProductiva, SetSelectedUnidadProductiva] = useState(null);
 
-const [usuarios, setUsuarios] = useState([]);
-
-const getUsuarios = async() => {
+const getUnidadesProductivas = async() => {
     try {
-        const res = await axios.get("http://localhost:4000/usuarios/listar");
+        const res = await axios.get("http://localhost:4000/unidadesProductivas/listar");
         const data = res.data;
-        setUsuarios(data);
+        setUnidadesProductivas(data);
         console.log(data);
     } catch (error) {
-        console.log("Error al cargar los usuarios: ",error);
+        console.log("Error al cargar las unidades productivas: ",error);
     }
 }
 
 useEffect(() => {
-    getUsuarios();
+    getUnidadesProductivas();
   }, []);
 
 
@@ -90,13 +87,11 @@ useEffect(() => {
   }, [visibleColumns]);
 
   const filteredItems = React.useMemo(() => {
-    let filteredUsers = [...usuarios];
+    let filteredUsers = [...unidadesProductivas];
 
     if (hasSearchFilter) {
-      filteredUsers = filteredUsers.filter((user) =>
-        user.nombres.toLowerCase().includes(filterValue.toLowerCase()) ||
-        user.apellidos.toLowerCase().includes(filterValue.toLowerCase()) ||
-        user.email.toLowerCase().includes(filterValue.toLowerCase())
+      filteredUsers = filteredUsers.filter((unidadProductiva) =>
+        unidadProductiva.nombre_unidad_productiva.toLowerCase().includes(filterValue.toLowerCase()),
       );
     }
     if (statusFilter !== "all" && Array.from(statusFilter).length !== statusOptions.length) {
@@ -106,7 +101,7 @@ useEffect(() => {
     }
 
     return filteredUsers;
-  }, [usuarios, filterValue, statusFilter]);
+  }, [unidadesProductivas, filterValue, statusFilter]);
 
   const pages = Math.ceil(filteredItems.length / rowsPerPage);
 
@@ -127,61 +122,29 @@ useEffect(() => {
     });
   }, [sortDescriptor, items]);
 
-  const renderCell = React.useCallback((user, columnKey) => {
-    const cellValue = user[columnKey];
+  const renderCell = React.useCallback((unidadProductiva, columnKey) => {
+    const cellValue = unidadProductiva[columnKey];
 
     switch (columnKey) {
-      case "nombres":
-        return (
-          <User
-            avatarProps={{radius: "lg", src: user.avatar}}
-            description={user.email}
-            // name={cellValue}
-            // name={cellValue + user.apellidos}
-            name={`${cellValue} ${user.apellidos}`}
-          >
-            {user.email}
-          </User>
-        );
-      case "role":
-        return (
-          <div className="flex flex-col">
-            <p className="text-bold text-small capitalize">{cellValue}</p>
-            <p className="text-bold text-small capitalize text-default-500">{user.rol}</p>
-          </div>
-        );
-      case "nombre_unidad_productiva":
+      case "fk_unidad_productiva":
         return (
           <div className="flex flex-col">
             {/* <p className="text-bold text-small capitalize">{cellValue}</p> */}
-            <p className="text-bold text-small capitalize text-default-500 bg-blue-100 rounded-md text-center">{user.nombre_unidad_productiva}</p>
+            <p className="text-bold text-small capitalize text-default-500 bg-blue-100 rounded-md text-center">{unidadProductiva.nombre_unidad_productiva}</p>
           </div>
-        );
-        case "telefono":
-          return (
-            <div className="flex flex-col">
-              {/* <p className="text-bold text-small capitalize">{cellValue}</p> */}
-              <p className="text-bold text-small capitalize text-default-500">{user.telefono}</p>
-            </div>
-          );
-      case "estado":
-        return (
-          <Chip className="capitalize" color={statusColorMap[user.estado]} size="sm" variant="flat">
-            {cellValue}
-          </Chip>
         );
       case "actions":
         return (
-          <div className="relative flex justify-end items-center gap-2">
+          <div className="relative flex justify-center  gap-2">
             <Dropdown>
               <DropdownTrigger>
                 <Button isIconOnly size="sm" variant="light">
-                  <RiUserSettingsLine className="text-default-500 text-2xl mr-2" />
+                  <FaEdit className="text-default-400 text-2xl ml-1" />
                 </Button>
               </DropdownTrigger>
               <DropdownMenu>
                 <DropdownItem>View</DropdownItem>
-                <DropdownItem onClick={() => handleOpenModalUpdate(user)}>Edit</DropdownItem>
+                <DropdownItem onClick={() => handleOpenModalUpdate(unidadProductiva)}>Edit</DropdownItem>
                 <DropdownItem>Delete</DropdownItem>
               </DropdownMenu>
             </Dropdown>
@@ -225,39 +188,18 @@ useEffect(() => {
 
   const topContent = React.useMemo(() => {
     return (
-      <div className="flex flex-col gap-1 mt-2 w-full">
+      <div className="flex flex-col gap-1 mt-2 w-full ">
         <div className="flex justify-between gap-3 items-end">
           <Input
             isClearable
             className="w-full sm:max-w-[44%]"
-            placeholder="Buscar usuario..."
-            startContent={<MdOutlinePersonSearch className="text-2xl text-default-500"/>}
+            placeholder="Buscar por unidad productiva..."
+            startContent={<FaSearch className="text-xl text-default-500"/>}
             value={filterValue}
             onClear={() => onClear()}
             onValueChange={onSearchChange}
           />
           <div className="flex gap-3">
-            <Dropdown>
-              <DropdownTrigger className="hidden sm:flex">
-                <Button endContent={<BsPersonFillCheck className="text-lg" />} variant="flat">
-                  Status
-                </Button>
-              </DropdownTrigger>
-              <DropdownMenu
-                disallowEmptySelection
-                aria-label="Table Columns"
-                closeOnSelect={false}
-                selectedKeys={statusFilter}
-                selectionMode="multiple"
-                onSelectionChange={setStatusFilter}
-              >
-                {statusOptions.map((status) => (
-                  <DropdownItem key={status.uid} className="capitalize">
-                    {capitalize(status.name)}
-                  </DropdownItem>
-                ))}
-              </DropdownMenu>
-            </Dropdown>
             <Dropdown>
               <DropdownTrigger className="hidden sm:flex">
                 <Button endContent={<IoFilterSharp className="text-lg" />} variant="flat">
@@ -279,14 +221,14 @@ useEffect(() => {
                 ))}
               </DropdownMenu>
             </Dropdown>
-            <Button className="bg-[#8bddbc] text-md" onClick={handleOpenModal} /* color="primary"  *//* endContent={<FaUsers />} */>
+            <Button className="bg-[#8bddbc] text-md" onClick={handleOpenModal}>
             <TfiPlus size={20}/>
-              Usuario
+              Unidad Productiva
             </Button>
           </div>
         </div>
         <div className="flex justify-between items-center">
-          <span className="text-default-400 text-small">Total {usuarios.length} usuarios</span>
+          <span className="text-default-400 text-small">Total: {unidadesProductivas.length} unidades productivas</span>
           <label className="flex items-center text-default-400 text-small">
             Rows per page:
             <select
@@ -306,7 +248,7 @@ useEffect(() => {
     statusFilter,
     visibleColumns,
     onRowsPerPageChange,
-    usuarios.length,
+    unidadesProductivas.length,
     onSearchChange,
     hasSearchFilter,
   ]);
@@ -341,47 +283,47 @@ useEffect(() => {
   }, [selectedKeys, items.length, page, pages, hasSearchFilter]);
 
   return (
-    <div className="mt-2 mx-auto w-fit">
-        <Table
-        aria-label="Example table with custom cells, pagination and sorting"
-        isHeaderSticky
-        bottomContent={bottomContent}
-        bottomContentPlacement="outside"
-      //   classNames={{
-      //     wrapper: "max-h-[382px] w-[800px] bg-slate-100 mx-auto",
-      //   }}
-      classNames={{
-          wrapper: "h-[390px] max-h-[500px] w-[1200px] overflow-y-auto",
-        }}
-        selectedKeys={selectedKeys}
-        selectionMode="multiple"
-        sortDescriptor={sortDescriptor}
-        topContent={topContent}
-        topContentPlacement="outside"
-        onSelectionChange={setSelectedKeys}
-        onSortChange={setSortDescriptor}
-      >
-        <TableHeader columns={headerColumns}>
-          {(column) => (
-            <TableColumn
-              key={column.uid}
-              align={column.uid === "actions" ? "center" : "start"}
-              allowsSorting={column.sortable}
-            >
-              {column.name}
-            </TableColumn>
-          )}
-        </TableHeader>
-        <TableBody emptyContent={"No users found"} items={sortedItems}>
-          {(item) => (
-            <TableRow key={item.id_usuario}>
-              {(columnKey) => <TableCell>{renderCell(item, columnKey)}</TableCell>}
-            </TableRow>
-          )}
-        </TableBody>
-      </Table>
-      <ModalRegistrarUsuario isOpen={isModalOpen} onOpen={handleOpenModal} onClose={handleCloseModal} getUsuarios={getUsuarios}/>
-      <ModalActualizarUsuario user={selectedUser} isOpen={isModalOpenUpdate} onClose={handleCloseModalUpdate} getUsuarios={getUsuarios}/>
+    <div className="mt-5 mx-auto w-fit">
+      <Table
+      aria-label="Example table with custom cells, pagination and sorting"
+      isHeaderSticky
+      bottomContent={bottomContent}
+      bottomContentPlacement="outside"
+    //   classNames={{
+    //     wrapper: "max-h-[382px] w-[800px] bg-slate-100 mx-auto",
+    //   }}
+    classNames={{
+        wrapper: "h-[320px] max-h-[500px] w-[1200px]  overflow-y-auto",
+      }}
+      selectedKeys={selectedKeys}
+      selectionMode="multiple"
+      sortDescriptor={sortDescriptor}
+      topContent={topContent}
+      topContentPlacement="outside"
+      onSelectionChange={setSelectedKeys}
+      onSortChange={setSortDescriptor}
+    >
+      <TableHeader columns={headerColumns}>
+        {(column) => (
+          <TableColumn
+            key={column.uid}
+            align={column.uid === "actions" ? "center" : "start"}
+            allowsSorting={column.sortable}
+          >
+            {column.name}
+          </TableColumn>
+        )}
+      </TableHeader>
+      <TableBody emptyContent={"Unidad Productiva No Encontrada"} items={sortedItems}>
+        {(item) => (
+          <TableRow key={item.id_unidad_productiva}>
+            {(columnKey) => <TableCell>{renderCell(item, columnKey)}</TableCell>}
+          </TableRow>
+        )}
+      </TableBody>
+    </Table>
+    <ModalRegistrarUnidadProductiva isOpen={isModalOpen} onOpen={handleOpenModal} onClose={handleCloseModal} getUnidadesProductivas={getUnidadesProductivas}/>
+    <ModalActualizarUnidadProductiva unidadProductiva={selectedUnidadProductiva} isOpen={isModalOpenUpdate} onOpen={handleOpenModalUpdate} onClose={handleCloseModalUpdate} getUnidadesProductivas={getUnidadesProductivas}/>
     </div>
   );
 }
